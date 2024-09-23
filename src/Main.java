@@ -11,6 +11,6 @@ public class Main {
     }
 
     private static void createAndShowGUI(){
-//        new MainFrame("Tetris");
+        new MainFrame("Tetris");
     }
 }

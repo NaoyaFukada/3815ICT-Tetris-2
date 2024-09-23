@@ -2,6 +2,7 @@ package util;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.net.URL;
 
 // Used Design Pattern:
@@ -22,12 +23,66 @@ public class UIUtils {
         return instance;
     }
 
-    // Method to create labels securely and consistently
+    // Methods
+
+    // Create GridBagConstraints
+    public GridBagConstraints createGridBagConstraints() {
+        GridBagConstraints gbc = new GridBagConstraints();  // Create a new GridBagConstraints object
+        gbc.fill = GridBagConstraints.HORIZONTAL;          // Set the fill property to stretch horizontally
+        gbc.insets = new Insets(5, 5, 5, 5);               // Set padding (5 pixels on all sides)
+        return gbc;                                        // Return the configured GridBagConstraints
+    }
+
+
+    // Method to create labels
     public JLabel createLabel(String text, Font font, Color color) {
         JLabel label = new JLabel(text, SwingConstants.CENTER);
         label.setFont(font);
         label.setForeground(color);
         return label;
+    }
+
+    public JLabel createConfigureLabel(String text, Font font) {
+        JLabel label = new JLabel(text);
+        if (font != null) {
+            label.setFont(font);
+        }
+        return label;
+    }
+
+    public JLabel createValueLabel(int value) {
+        return new JLabel(String.valueOf(value));
+    }
+
+    public JLabel createValueLabel(String value) {
+        return new JLabel(value);
+    }
+
+    // Method to create buttons
+    public JButton createButton(String text) {
+        JButton button = new JButton(text);
+        button.setPreferredSize(new Dimension(300, 50));  // Adjust size
+        button.setMaximumSize(new Dimension(300, 50));  // Ensure consistent size
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);  // Center the button
+        button.setFont(new Font("Arial", Font.PLAIN, 18));  // Set button font
+        return button;
+    }
+
+    // Method to create slider
+    public JSlider createSlider(int min, int max, int value) {
+        JSlider slider = new JSlider(min, max, value);
+        slider.setPreferredSize(new Dimension(300, 40));
+        slider.setMajorTickSpacing(1);
+        slider.setPaintTicks(true);
+        slider.setPaintLabels(true);
+        return slider;
+    }
+
+    // Method to create checkbox
+    public JCheckBox createCheckBox(boolean isSelected) {
+        JCheckBox checkBox = new JCheckBox();
+        checkBox.setSelected(isSelected);
+        return checkBox;
     }
 
     // Method to create an image label with secure loading and scaling
