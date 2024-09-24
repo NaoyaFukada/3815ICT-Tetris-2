@@ -54,6 +54,12 @@ public class MainPanel extends JPanel {
         this.highScoreButton = UIUtils.getInstance().createButton("High Scores");
         this.add(highScoreButton);
 
+        // Action listener for high score button
+        this.highScoreButton.addActionListener(e -> {
+            // Show the "HighScore" screen on MainFrame
+            MainFrame.MAIN_FRAME.showScreen("High Score Panel");
+        });
+
         this.add(Box.createVerticalStrut(20));
         this.exitButton = UIUtils.getInstance().createButton("Exit");
         this.add(exitButton);

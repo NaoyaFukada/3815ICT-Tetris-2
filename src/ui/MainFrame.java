@@ -3,6 +3,8 @@ package ui;
 import ui.panel.ConfigurePanel;
 import ui.panel.MainPanel;
 import ui.panel.PlayPanel;
+import ui.panel.HighScorePanel;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -137,10 +139,13 @@ public class MainFrame extends JFrame {
 //        mainPanel.setHighScoreListener((e) -> {
 //            this.cardLayout.show(this.containerPanel, "High Score Panel");
 //        });
+
+        HighScorePanel highScorePanel = new HighScorePanel();
+
         this.containerPanel.add(mainPanel, "Main");
         this.containerPanel.add(this.playPanel, "Play");
         this.containerPanel.add(configurePanel, "Configuration");
-//        this.containerPanel.add(highScorePanel, "High Score Panel");
+        this.containerPanel.add(highScorePanel, "High Score Panel");
     }
 
     private void adjustSizeForPanel(String panelName) {
