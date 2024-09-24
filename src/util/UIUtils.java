@@ -2,7 +2,6 @@ package util;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.net.URL;
 
 // Used Design Pattern:
@@ -42,11 +41,18 @@ public class UIUtils {
         return label;
     }
 
-    public JLabel createConfigureLabel(String text, Font font) {
+    public JLabel createNormalLabel(String text, Font font) {
         JLabel label = new JLabel(text);
         if (font != null) {
             label.setFont(font);
         }
+        return label;
+    }
+
+    // Method to create a centered label with custom font and size for status (Music and Sound)
+    public JLabel createStatusLabel(String text, Font font) {
+        JLabel label = new JLabel(text, SwingConstants.CENTER); // Center the text
+        label.setFont(font);
         return label;
     }
 

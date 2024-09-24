@@ -1,5 +1,6 @@
 package ui.panel;
 
+import model.MetaConfig;
 import ui.MainFrame;
 import util.UIUtils;
 
@@ -36,6 +37,12 @@ public class MainPanel extends JPanel {
         this.add(Box.createVerticalStrut(30));  // Add space below title
         this.playButton = UIUtils.getInstance().createButton("Play");
         this.add(playButton);
+        playButton.addActionListener((e) -> {
+            // Fetch the singleton instance of MetaConfig
+            MetaConfig config = MetaConfig.getInstance();
+            // Show the "Play" screen on MainFrame
+            MainFrame.MAIN_FRAME.showScreen("Play", config.getFieldWidth(), config.getFieldHeight(), config.isExtendModeEnabled());
+        });
 
         this.add(Box.createVerticalStrut(20));  // Add space between buttons
         this.configButton = UIUtils.getInstance().createButton("Configuration");

@@ -2,6 +2,7 @@ package ui;
 
 import ui.panel.ConfigurePanel;
 import ui.panel.MainPanel;
+import ui.panel.PlayPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ import java.awt.event.WindowEvent;
 public class MainFrame extends JFrame {
     public static MainFrame MAIN_FRAME;
     private CardLayout cardLayout;
-//    private PlayPanel playPanel;
+    private PlayPanel playPanel;
     private JPanel containerPanel;
 
     public MainFrame(String title) throws HeadlessException {
@@ -124,7 +125,7 @@ public class MainFrame extends JFrame {
 
     private void initPanels() {
         MainPanel mainPanel = new MainPanel();
-//        this.playPanel = new PlayPanel(this.cardLayout, this.containerPanel);
+        this.playPanel = new PlayPanel();
 //        mainPanel.setPlayListener((e) -> {
 //            this.cardLayout.show(this.containerPanel, "Play Panel");
 //        });
@@ -137,7 +138,7 @@ public class MainFrame extends JFrame {
 //            this.cardLayout.show(this.containerPanel, "High Score Panel");
 //        });
         this.containerPanel.add(mainPanel, "Main");
-//        this.containerPanel.add(this.playPanel, "Play Panel");
+        this.containerPanel.add(this.playPanel, "Play");
         this.containerPanel.add(configurePanel, "Configuration");
 //        this.containerPanel.add(highScorePanel, "High Score Panel");
     }
@@ -147,8 +148,8 @@ public class MainFrame extends JFrame {
             case "Main":  // For the main panel
                 this.setSize(450, 500);
                 break;
-            case "Play Panel":
-                this.setSize(800, 600);
+            case "Play":
+                this.setSize(600, 400);
                 break;
             case "Configuration":
                 this.setSize(600, 500);
@@ -159,8 +160,26 @@ public class MainFrame extends JFrame {
         this.setLocationRelativeTo(null);  // Center the window after resizing
     }
 
+    private void adjustSizeForPanel(int w, int h) {
+        this.setSize(w, h);
+        this.setLocationRelativeTo(null);  // Center the window after resizing
+        playPanel.OpenPanel();
+    }
+
     public void showScreen(String screenName) {
         cardLayout.show(containerPanel, screenName);  // Switch to the desired panel
         adjustSizeForPanel(screenName);
+    }
+
+    public void showScreen(String screenName, int get_w, int get_h, boolean twoPlayerMode) {
+        int w;
+        int h = get_h * 20 + 200;
+        if (twoPlayerMode) {
+            w = get_w * 40 + 450;
+        } else {
+            w = get_w * 20 + 220;
+        }
+        cardLayout.show(containerPanel, screenName);  // Switch to the desired panel
+        adjustSizeForPanel(w, h);
     }
 }

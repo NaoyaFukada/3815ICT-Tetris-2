@@ -54,7 +54,7 @@ public class ConfigurePanel extends AbstractPanel implements ConfigObserver {
         GridBagConstraints gbc = UIUtils.getInstance().createGridBagConstraints();
 
         // Field Width
-        JLabel widthLabel = UIUtils.getInstance().createConfigureLabel("Field Width (No of cells):", null);
+        JLabel widthLabel = UIUtils.getInstance().createNormalLabel("Field Width (No of cells):", null);
         JSlider widthSlider = UIUtils.getInstance().createSlider(5, 15, config.getFieldWidth());
         widthValueLabel = UIUtils.getInstance().createValueLabel(widthSlider.getValue());
         gbc.gridx = 0;
@@ -72,7 +72,7 @@ public class ConfigurePanel extends AbstractPanel implements ConfigObserver {
         });
 
         // Field Height
-        JLabel heightLabel = UIUtils.getInstance().createConfigureLabel("Field Height (No of cells):", null);
+        JLabel heightLabel = UIUtils.getInstance().createNormalLabel("Field Height (No of cells):", null);
         JSlider heightSlider = UIUtils.getInstance().createSlider(15, 30, config.getFieldHeight());
         heightValueLabel = UIUtils.getInstance().createValueLabel(heightSlider.getValue());
         gbc.gridx = 0;
@@ -90,7 +90,7 @@ public class ConfigurePanel extends AbstractPanel implements ConfigObserver {
         });
 
         // Game Level
-        JLabel levelLabel = UIUtils.getInstance().createConfigureLabel("Game Level:", null);
+        JLabel levelLabel = UIUtils.getInstance().createNormalLabel("Game Level:", null);
         JSlider levelSlider = UIUtils.getInstance().createSlider(1, 10, config.getGameLevel());
         levelValueLabel = UIUtils.getInstance().createValueLabel(levelSlider.getValue());
         gbc.gridx = 0;
@@ -108,7 +108,7 @@ public class ConfigurePanel extends AbstractPanel implements ConfigObserver {
         });
 
         // Music On/Off
-        JLabel musicLabel = UIUtils.getInstance().createConfigureLabel("Music (On|Off):", null);
+        JLabel musicLabel = UIUtils.getInstance().createNormalLabel("Music (On|Off):", null);
         musicCheckBox = UIUtils.getInstance().createCheckBox(config.isMusicEnabled());
         JLabel musicValueLabel = UIUtils.getInstance().createValueLabel(musicCheckBox.isSelected() ? "On" : "Off");
         gbc.gridx = 0;
@@ -126,7 +126,7 @@ public class ConfigurePanel extends AbstractPanel implements ConfigObserver {
         });
 
         // Sound Effect On/Off
-        JLabel soundLabel = UIUtils.getInstance().createConfigureLabel("Sound Effect (On|Off):", null);
+        JLabel soundLabel = UIUtils.getInstance().createNormalLabel("Sound Effect (On|Off):", null);
         soundCheckBox = UIUtils.getInstance().createCheckBox(config.isSoundEnabled());
         JLabel soundValueLabel = UIUtils.getInstance().createValueLabel(soundCheckBox.isSelected() ? "On" : "Off");
         gbc.gridx = 0;
@@ -144,7 +144,7 @@ public class ConfigurePanel extends AbstractPanel implements ConfigObserver {
         });
 
         // Extend Mode On/Off
-        JLabel extendLabel = UIUtils.getInstance().createConfigureLabel("Extend Mode (On|Off):", null);
+        JLabel extendLabel = UIUtils.getInstance().createNormalLabel("Extend Mode (On|Off):", null);
         extendCheckBox = UIUtils.getInstance().createCheckBox(config.isExtendModeEnabled());
         JLabel extendValueLabel = UIUtils.getInstance().createValueLabel(extendCheckBox.isSelected() ? "On" : "Off");
         gbc.gridx = 0;
@@ -163,7 +163,7 @@ public class ConfigurePanel extends AbstractPanel implements ConfigObserver {
         });
 
         // Player One Type
-        JLabel playerOneLabel = UIUtils.getInstance().createConfigureLabel("Player One Type:", null);
+        JLabel playerOneLabel = UIUtils.getInstance().createNormalLabel("Player One Type:", null);
         playerOneHuman = new JRadioButton("Human", config.getPlayerOneType() == PlayerType.HUMAN);
         playerOneAI = new JRadioButton("AI", config.getPlayerOneType() == PlayerType.AI);
         playerOneExternal = new JRadioButton("External", config.getPlayerOneType() == PlayerType.EXTERNAL);
@@ -199,7 +199,7 @@ public class ConfigurePanel extends AbstractPanel implements ConfigObserver {
         playerOneExternal.addActionListener(playerOneListener);
 
         // Player Two Type
-        JLabel playerTwoLabel = UIUtils.getInstance().createConfigureLabel("Player Two Type:", null);
+        JLabel playerTwoLabel = UIUtils.getInstance().createNormalLabel("Player Two Type:", null);
         playerTwoHuman = new JRadioButton("Human", config.getPlayerTwoType() == PlayerType.HUMAN);
         playerTwoAI = new JRadioButton("AI", config.getPlayerTwoType() == PlayerType.AI);
         playerTwoExternal = new JRadioButton("External", config.getPlayerTwoType() == PlayerType.EXTERNAL);
