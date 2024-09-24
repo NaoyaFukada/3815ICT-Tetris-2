@@ -10,6 +10,7 @@ public class Main {
         SwingUtilities.invokeLater(() -> createAndShowGUI());
     }
 
+    
     private static void createAndShowGUI(){
         new MainFrame("Tetris");
     }
