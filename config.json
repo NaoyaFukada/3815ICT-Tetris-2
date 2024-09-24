@@ -1,7 +1,7 @@
 {
   "fieldWidth": 10,
-  "fieldHeight": 20,
-  "gameLevel": 7,
+  "fieldHeight": 15,
+  "gameLevel": 10,
   "musicEnabled": false,
   "soundEnabled": true,
   "extendModeEnabled": false,

@@ -170,7 +170,7 @@ public class PlayPanel extends AbstractPanel implements ConfigObserver {
         gameInfoPanel.add(nextTetrominoPanel);
 
         // Game board panel (where the Tetris game is displayed)
-        GameBoard gameBoardPanel = new GameBoard();
+        GameBoard gameBoardPanel = new GameBoard(config.getFieldWidth(), config.getFieldHeight(), config.getGameLevel());
         int borderWidth = 2; // Assuming 1-pixel borders between cells
         int adjustedW = (config.getFieldWidth() * (20 + borderWidth)) - borderWidth; // Total width
         int adjustedH = (config.getFieldHeight() * (20 + borderWidth)) - borderWidth; // Total height

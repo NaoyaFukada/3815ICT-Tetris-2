@@ -24,13 +24,13 @@ public class Game {
 
     public void update() {
         if (state == STATE_GAME_PLAY) {
-            currentShapeInstance.update();
+//            currentShapeInstance.update();
         }
     }
 
     public void setCurrentShape() {
         TetrisShape shape = TetrisShape.values()[random.nextInt(TetrisShape.values().length)];
-        currentShapeInstance = new TetrisShapeInstance(shape, this);
+//        currentShapeInstance = new TetrisShapeInstance(this);
     }
 
     public void incrementScore(int value) {

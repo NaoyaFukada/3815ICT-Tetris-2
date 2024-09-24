@@ -6,6 +6,7 @@ public class Board {
     private int width;
     private int height;
     private Color[][] cells;
+    private boolean gameOver = false;
 
     public Board(int width, int height) {
         this.width = width;
@@ -18,12 +19,6 @@ public class Board {
                 cells[row][col] = null;
             }
         }
-
-        // For demonstration, let's fill some cells with random colors
-        // Remove this in the actual game logic
-        cells[5][5] = Color.RED;
-        cells[6][5] = Color.BLUE;
-        cells[7][5] = Color.GREEN;
     }
 
     public Color getCellColor(int row, int col) {
@@ -34,11 +29,47 @@ public class Board {
         cells[row][col] = color;
     }
 
+    public void clearFullLines() {
+        for (int row = height - 1; row >= 0; row--) {
+            boolean fullLine = true;
+            for (int col = 0; col < width; col++) {
+                if (cells[row][col] == null) {
+                    fullLine = false;
+                    break;
+                }
+            }
+            if (fullLine) {
+                removeLine(row);
+                row++; // Check the same line again after removal
+            }
+        }
+    }
+
+    private void removeLine(int line) {
+        for (int row = line; row > 0; row--) {
+            for (int col = 0; col < width; col++) {
+                cells[row][col] = cells[row - 1][col];
+            }
+        }
+        // Clear the top line
+        for (int col = 0; col < width; col++) {
+            cells[0][col] = null;
+        }
+    }
+
     public int getWidth() {
         return width;
     }
 
     public int getHeight() {
         return height;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
     }
 }

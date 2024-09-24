@@ -1,22 +1,53 @@
 package ui.panel;
 
 import model.Board;
+import model.TetrisShapeInstance;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
-public class GameBoard extends JPanel {
+public class GameBoard extends JPanel implements ActionListener {
     public static final int CELL_SIZE = 20; // Fixed size for each cell
-    public static final int BOARD_WIDTH = 10; // Number of cells horizontally
-    public static final int BOARD_HEIGHT = 20; // Number of cells vertically
+    public static int BOARD_WIDTH; // Number of cells horizontally
+    public static int BOARD_HEIGHT; // Number of cells vertically
 
     private Board board;
+    private TetrisShapeInstance currentShape;
+    private Timer timer;
 
-    public GameBoard() {
+    public GameBoard(int w, int h, int l) {
         // Initialize the game board
-        board = new Board(BOARD_WIDTH, BOARD_HEIGHT);
+        board = new Board(w, h);
+        BOARD_WIDTH = w;
+        BOARD_HEIGHT = h;
+
+        // Initialize the current shape
+        currentShape = new TetrisShapeInstance(board, l);
+
+        // Set the preferred size
+        setPreferredSize(new Dimension(BOARD_WIDTH * CELL_SIZE, BOARD_HEIGHT * CELL_SIZE));
+
+        // Initialize the game loop timer
+        int delay = 20; // Adjust the delay as needed (milliseconds)
+        timer = new Timer(delay, this);
+        timer.start();
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (!board.isGameOver()) {
+            currentShape.update();
+            repaint();
+        } else {
+            timer.stop();
+            System.out.println("Stop");
+            // Optionally, show a game over message
+//            JOptionPane.showMessageDialog(this, "Game Over!");
+        }
+    }
+
+    // Calling repaint() will ultimately trigger the paintComponent() method to be called
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -39,7 +70,7 @@ public class GameBoard extends JPanel {
             }
         }
 
-        // Draw the current falling shape (if any)
-        // For now, we can leave this empty or draw a placeholder
+        // Draw the current falling shape
+        currentShape.render(g);
     }
 }
