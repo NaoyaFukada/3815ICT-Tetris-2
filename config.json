@@ -1,10 +1,10 @@
 {
-  "fieldWidth": 10,
+  "fieldWidth": 5,
   "fieldHeight": 15,
   "gameLevel": 10,
   "musicEnabled": false,
   "soundEnabled": true,
   "extendModeEnabled": true,
   "playerOneType": "HUMAN",
-  "playerTwoType": "AI"
+  "playerTwoType": "HUMAN"
 }

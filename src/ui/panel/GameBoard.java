@@ -1,60 +1,38 @@
 package ui.panel;
 
 import model.Board;
+import model.Game;
 import model.TetrisShapeInstance;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
-public class GameBoard extends JPanel implements ActionListener {
+public class GameBoard extends JPanel {
     public static final int CELL_SIZE = 20; // Fixed size for each cell
-    public static int BOARD_WIDTH; // Number of cells horizontally
-    public static int BOARD_HEIGHT; // Number of cells vertically
 
     private Board board;
     private TetrisShapeInstance currentShape;
-    private Timer timer;
+    private Game game;
 
-    public GameBoard(int w, int h, int l) {
-        // Initialize the game board
-        board = new Board(w, h);
-        BOARD_WIDTH = w;
-        BOARD_HEIGHT = h;
-
-        // Initialize the current shape
-        currentShape = new TetrisShapeInstance(board, l);
+    public GameBoard(Board board, TetrisShapeInstance currentShape, Game game) {
+        this.board = board;
+        this.currentShape = currentShape;
+        this.game = game; // Add this line
 
         // Set the preferred size
-        setPreferredSize(new Dimension(BOARD_WIDTH * CELL_SIZE, BOARD_HEIGHT * CELL_SIZE));
-
-        // Initialize the game loop timer
-        int delay = 20; // Adjust the delay as needed (milliseconds)
-        timer = new Timer(delay, this);
-        timer.start();
+        int width = board.getWidth() * CELL_SIZE;
+        int height = board.getHeight() * CELL_SIZE;
+        setPreferredSize(new Dimension(width, height));
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (!board.isGameOver()) {
-            currentShape.update();
-            repaint();
-        } else {
-            timer.stop();
-            System.out.println("Stop");
-            // Optionally, show a game over message
-//            JOptionPane.showMessageDialog(this, "Game Over!");
-        }
-    }
-
-    // Calling repaint() will ultimately trigger the paintComponent() method to be called
+    // Override paintComponent to render the game board
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Draw the cells
-        for (int row = 0; row < BOARD_HEIGHT; row++) {
-            for (int col = 0; col < BOARD_WIDTH; col++) {
+        // Draw the cells from the board
+        for (int row = 0; row < board.getHeight(); row++) {
+            for (int col = 0; col < board.getWidth(); col++) {
                 // Get the cell at this position
                 Color color = board.getCellColor(row, col);
 
@@ -72,5 +50,29 @@ public class GameBoard extends JPanel implements ActionListener {
 
         // Draw the current falling shape
         currentShape.render(g);
+
+        // If the game is paused, draw the message
+        if (game.isPaused()) {
+            // Draw a semi-transparent overlay
+            g.setColor(new Color(0, 0, 0, 150)); // RGBA color with alpha transparency
+            g.fillRect(0, 0, getWidth(), getHeight());
+
+            // Draw the pause message on two lines
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Arial", Font.BOLD, 10));
+            String message1 = "Game is paused.";
+            String message2 = "Press 'P' to continue.";
+
+            FontMetrics fm = g.getFontMetrics();
+            int x1 = (getWidth() - fm.stringWidth(message1)) / 2;
+            int x2 = (getWidth() - fm.stringWidth(message2)) / 2;
+            int y = getHeight() / 2;
+
+            // Draw the first message line
+            g.drawString(message1, x1, y - 10); // Slightly above center
+
+            // Draw the second message line
+            g.drawString(message2, x2, y + 10); // Slightly below center
+        }
     }
 }

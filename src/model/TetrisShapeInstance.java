@@ -46,7 +46,7 @@ public class TetrisShapeInstance {
 
         // Start position (top-middle of the board)
         this.x = board.getWidth() / 2 - coords[0].length / 2;
-        this.y = -2; // Start at the top of the board
+        this.y = -3; // Start at the top of the board
         this.progress = 0;
         this.collision = false;
         this.isWaiting = false;
@@ -81,7 +81,6 @@ public class TetrisShapeInstance {
                 y += 1;
             } else {
                 collision = true;
-//                settle();
                 return true;
             }
         }
@@ -143,24 +142,26 @@ public class TetrisShapeInstance {
         return collidesAt(newX, newY, coords);
     }
 
-    private boolean collidesAt(int newX, int newY, int[][] shape) {
+    private boolean collidesAt ( int newX, int newY, int[][] shape){
         for (int r = 0; r < shape.length; r++) {
             for (int c = 0; c < shape[0].length; c++) {
                 if (shape[r][c] != 0) {
                     int boardX = newX + c;
                     int boardY = newY + r;
 
-                    // Check boundaries
-                    if (boardX < 0 || boardX >= board.getWidth() || boardY >= board.getHeight()) {
-                        if (boardY >= board.getHeight()) {
-                            return true; // Collided with the bottom
-                        }
-                        continue; // Ignore other out-of-bounds positions
+                    // Check horizontal boundaries
+                    if (boardX < 0 || boardX >= board.getWidth()) {
+                        return true; // Collision with left or right wall
+                    }
+
+                    // Check vertical boundaries
+                    if (boardY >= board.getHeight()) {
+                        return true; // Collision with bottom
                     }
 
                     // Check if the cell is occupied
                     if (boardY >= 0 && board.getCellColor(boardY, boardX) != null) {
-                        return true;
+                        return true; // Collision with existing blocks
                     }
                 }
             }
@@ -205,6 +206,7 @@ public class TetrisShapeInstance {
         }
     }
 
+
     public void render(Graphics g) {
         int yOffset = (int) ((progress * GameBoard.CELL_SIZE) / progressThreshold);
 
@@ -227,6 +229,25 @@ public class TetrisShapeInstance {
 
     // Speed up the falling when the down key is pressed
     public void speedUp() {
-        progress += progressThreshold / 2; // Increase progress to speed up falling
+        progress += progressIncrement * 3;
+        // Check collision immediately after speeding up
+        while (progress >= progressThreshold) {
+            progress -= progressThreshold;
+            // Try to move down one row and check for collision
+            if (!collidesAt(x, y + 1)) {
+                y += 1;  // Move the shape down by one row
+            } else {
+                // If a collision occurs, mark it and settle the shape
+                collision = true;
+                settle();
+                return;
+            }
+        }
+        System.out.println(y + 1);
+        if (collidesAt(x, y + 1)) {
+            collision = true;
+            settle();
+            System.out.println("settled");
+        }
     }
 }

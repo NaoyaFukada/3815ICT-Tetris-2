@@ -2,6 +2,7 @@ package model;
 
 import java.awt.*;
 import java.util.Random;
+import model.Board;
 
 public class Game {
     public static final int STATE_GAME_PLAY = 0;
@@ -17,20 +18,23 @@ public class Game {
     private Color[][] board = new Color[BOARD_HEIGHT][BOARD_WIDTH];
     private TetrisShapeInstance currentShapeInstance;
     private Random random = new Random();
+    private int initialLevel;
+    private Board modelBoard;
 
-    public Game() {
+    public Game(Board board, int initialLevel) {
+        this.initialLevel = initialLevel;
+        this.modelBoard = board;
         setCurrentShape();
     }
 
     public void update() {
         if (state == STATE_GAME_PLAY) {
-//            currentShapeInstance.update();
+            currentShapeInstance.update();
         }
     }
 
     public void setCurrentShape() {
-        TetrisShape shape = TetrisShape.values()[random.nextInt(TetrisShape.values().length)];
-//        currentShapeInstance = new TetrisShapeInstance(this);
+        currentShapeInstance = new TetrisShapeInstance(this.modelBoard, this.initialLevel);
     }
 
     public void incrementScore(int value) {
@@ -44,8 +48,27 @@ public class Game {
         setCurrentShape();
     }
 
-    // Getters and setters for state, score, board, etc.
+    public void pauseGame() {
+        state = STATE_GAME_PAUSE;
+    }
 
+    public void resumeGame() {
+        state = STATE_GAME_PLAY;
+    }
+
+    public void togglePauseGame() {
+        if (state == STATE_GAME_PLAY) {
+            state = STATE_GAME_PAUSE;  // Pause the game
+        } else if (state == STATE_GAME_PAUSE) {
+            state = STATE_GAME_PLAY;  // Resume the game
+        }
+    }
+
+    public boolean isPaused() {
+        return state == STATE_GAME_PAUSE;
+    }
+
+    // Getters and setters for state, score, board, etc.
     public int getState() {
         return state;
     }

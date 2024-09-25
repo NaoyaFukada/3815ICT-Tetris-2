@@ -5,7 +5,6 @@ import ui.panel.MainPanel;
 import ui.panel.PlayPanel;
 import ui.panel.HighScorePanel;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -30,7 +29,7 @@ public class MainFrame extends JFrame {
         this.initLayout();  // Initialize layout
         this.initPanels();  // Initialize panels
         this.setVisible(true);  // Make the frame visible
-//        this.setupKeyBindings();  // Setup key bindings
+        this.setupKeyBindings();  // Setup key bindings
     }
 
     public void confirmExit() {
@@ -48,72 +47,104 @@ public class MainFrame extends JFrame {
         }
     }
 
-//    // Setup key bindings for game controls
-//    private void setupKeyBindings() {
-//        // InputMap to capture key presses
-//        // WHen value was 2, it means "The input map is active when the window containing the component has focus."
-//        InputMap inputMap = this.containerPanel.getInputMap(2);  // Focus on the window
-//
-//        // ActionMap to define actions when keys are pressed
-//        ActionMap actionMap = this.containerPanel.getActionMap();
-//
-//        // Define actions for left, right, up, down, pause, music, and sound controls
-//        Action leftAction = new AbstractAction() {
-//            public void actionPerformed(ActionEvent e) {
-//                MainFrame.this.playPanel.receiveKey(0);  // Left key
-//            }
-//        };
-//        Action leftAction2 = new AbstractAction() {
-//            public void actionPerformed(ActionEvent e) {
-//                MainFrame.this.playPanel.receiveKey(7);  // Comma key (alternative left key)
-//            }
-//        };
-//        Action rightAction = new AbstractAction() {
-//            public void actionPerformed(ActionEvent e) {
-//                MainFrame.this.playPanel.receiveKey(1);  // Right key
-//            }
-//        };
-//        Action rightAction2 = new AbstractAction() {
-//            public void actionPerformed(ActionEvent e) {
-//                MainFrame.this.playPanel.receiveKey(8);  // Period key (alternative right key)
-//            }
-//        };
-//        Action upAction = new AbstractAction() {
-//            public void actionPerformed(ActionEvent e) {
-//                MainFrame.this.playPanel.receiveKey(2);  // Up key
-//            }
-//        };
-//        Action upAction2 = new AbstractAction() {
-//            public void actionPerformed(ActionEvent e) {
-//                MainFrame.this.playPanel.receiveKey(9);  // L key (alternative up key)
-//            }
-//        };
-//        Action downAction = new AbstractAction() {
-//            public void actionPerformed(ActionEvent e) {
-//                MainFrame.this.playPanel.receiveKey(3);  // Down key
-//            }
-//        };
-//        Action downAction2 = new AbstractAction() {
-//            public void actionPerformed(ActionEvent e) {
-//                MainFrame.this.playPanel.receiveKey(10);  // Space key (alternative down key)
-//            }
-//        };
-//        Action pauseAction = new AbstractAction() {
-//            public void actionPerformed(ActionEvent e) {
-//                MainFrame.this.playPanel.receiveKey(4);  // P key (pause)
-//            }
-//        };
-//        Action musicAction = new AbstractAction() {
-//            public void actionPerformed(ActionEvent e) {
-//                MainFrame.this.playPanel.receiveKey(5);  // M key (toggle music)
-//            }
-//        };
-//        Action soundAction = new AbstractAction() {
-//            public void actionPerformed(ActionEvent e) {
-//                MainFrame.this.playPanel.receiveKey(6);  // S key (toggle sound)
-//            }
-//        };
-//    }
+    // Setup key bindings for game controls
+    private void setupKeyBindings() {
+        InputMap inputMap = this.containerPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);  // Focus on the window
+
+        ActionMap actionMap = this.containerPanel.getActionMap();
+
+        // Define actions for left, right, up, down, pause, music, and sound controls
+        Action leftAction = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                MainFrame.this.playPanel.receiveKey(0);  // Left key for Player 1
+            }
+        };
+        Action leftAction2 = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                MainFrame.this.playPanel.receiveKey(7);  // Comma key (alternative left key for Player 2)
+            }
+        };
+        Action rightAction = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                MainFrame.this.playPanel.receiveKey(1);  // Right key for Player 1
+            }
+        };
+        Action rightAction2 = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                MainFrame.this.playPanel.receiveKey(8);  // Period key (alternative right key for Player 2)
+            }
+        };
+        Action upAction = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                MainFrame.this.playPanel.receiveKey(2);  // Up key for Player 1
+            }
+        };
+        Action upAction2 = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                MainFrame.this.playPanel.receiveKey(9);  // L key (alternative up key for Player 2)
+            }
+        };
+        Action downAction = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                MainFrame.this.playPanel.receiveKey(3);  // Down key for Player 1
+            }
+        };
+        Action downAction2 = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                MainFrame.this.playPanel.receiveKey(10);  // Space key (alternative down key for Player 2)
+            }
+        };
+        Action pauseAction = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                MainFrame.this.playPanel.receiveKey(4);  // P key (pause)
+            }
+        };
+        Action musicAction = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                MainFrame.this.playPanel.receiveKey(5);  // M key (toggle music)
+            }
+        };
+        Action soundAction = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                MainFrame.this.playPanel.receiveKey(6);  // S key (toggle sound)
+            }
+        };
+
+        // Bind the keys to their respective actions
+        inputMap.put(KeyStroke.getKeyStroke("LEFT"), "p1MoveLeft");
+        actionMap.put("p1MoveLeft", leftAction);
+
+        inputMap.put(KeyStroke.getKeyStroke("RIGHT"), "p1MoveRight");
+        actionMap.put("p1MoveRight", rightAction);
+
+        inputMap.put(KeyStroke.getKeyStroke("UP"), "p1Rotate");
+        actionMap.put("p1Rotate", upAction);
+
+        inputMap.put(KeyStroke.getKeyStroke("DOWN"), "p1MoveDown");
+        actionMap.put("p1MoveDown", downAction);
+
+        inputMap.put(KeyStroke.getKeyStroke("P"), "pauseGame");
+        actionMap.put("pauseGame", pauseAction);
+
+        inputMap.put(KeyStroke.getKeyStroke("M"), "toggleMusic");
+        actionMap.put("toggleMusic", musicAction);
+
+        inputMap.put(KeyStroke.getKeyStroke("S"), "toggleSound");
+        actionMap.put("toggleSound", soundAction);
+
+        // Player 2 controls
+        inputMap.put(KeyStroke.getKeyStroke(','), "p2MoveLeft");
+        actionMap.put("p2MoveLeft", leftAction2);
+
+        inputMap.put(KeyStroke.getKeyStroke('.'), "p2MoveRight");
+        actionMap.put("p2MoveRight", rightAction2);
+
+        inputMap.put(KeyStroke.getKeyStroke('L'), "p2Rotate");
+        actionMap.put("p2Rotate", upAction2);
+
+        inputMap.put(KeyStroke.getKeyStroke(' '), "p2MoveDown");
+        actionMap.put("p2MoveDown", downAction2);
+    }
 
     private void initLayout() {
         this.setLayout(new BorderLayout());
@@ -128,18 +159,7 @@ public class MainFrame extends JFrame {
     private void initPanels() {
         MainPanel mainPanel = new MainPanel();
         this.playPanel = new PlayPanel();
-//        mainPanel.setPlayListener((e) -> {
-//            this.cardLayout.show(this.containerPanel, "Play Panel");
-//        });
         ConfigurePanel configurePanel = new ConfigurePanel();
-//        mainPanel.setConfigListener((e) -> {
-//            this.cardLayout.show(this.containerPanel, "Configure Panel");
-//        });
-//        HighScorePanel highScorePanel = new HighScorePanel(this.cardLayout, this.containerPanel);
-//        mainPanel.setHighScoreListener((e) -> {
-//            this.cardLayout.show(this.containerPanel, "High Score Panel");
-//        });
-
         HighScorePanel highScorePanel = new HighScorePanel();
 
         this.containerPanel.add(mainPanel, "Main");
