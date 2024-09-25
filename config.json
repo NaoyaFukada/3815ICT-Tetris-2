@@ -2,7 +2,7 @@
   "fieldWidth": 5,
   "fieldHeight": 15,
   "gameLevel": 10,
-  "musicEnabled": false,
+  "musicEnabled": true,
   "soundEnabled": true,
   "extendModeEnabled": true,
   "playerOneType": "HUMAN",
