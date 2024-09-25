@@ -3,6 +3,7 @@ package model;
 import ui.panel.GameBoard;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Random;
 
 public class TetrisShapeInstance {
@@ -21,7 +22,7 @@ public class TetrisShapeInstance {
     private boolean collision = false;
     private boolean isWaiting = false;
     private long timeOfLastCollision = 0;   // Time when collision was detected
-    private final int collisionDelay = 300; // Delay in milliseconds before settling
+    private final int collisionDelay = 100; // Delay in milliseconds before settling
 
     public TetrisShapeInstance(Board board, int initialLevel) {
         this.board = board;
@@ -40,11 +41,12 @@ public class TetrisShapeInstance {
         TetrisShape shape = shapes[random.nextInt(shapes.length)];
 
         this.coords = shape.getShape();
+        System.out.println(Arrays.deepToString(coords));
         this.color = shape.getColor();
 
         // Start position (top-middle of the board)
         this.x = board.getWidth() / 2 - coords[0].length / 2;
-        this.y = 0; // Start at the top of the board
+        this.y = -2; // Start at the top of the board
         this.progress = 0;
         this.collision = false;
         this.isWaiting = false;
@@ -79,12 +81,14 @@ public class TetrisShapeInstance {
                 y += 1;
             } else {
                 collision = true;
+//                settle();
                 return true;
             }
         }
 
         // Perform immediate collision check
         if (collidesAt(x, y + 1)) {
+            System.out.println("collidesAt(x, y + 1)");
             collision = true;
         }
 
@@ -171,13 +175,18 @@ public class TetrisShapeInstance {
                 if (coords[r][c] != 0) {
                     int boardX = x + c;
                     int boardY = y + r;
-                    System.out.println(boardY);
                     if (boardY >= 0) {
+                        System.out.println(board.getCellColor(boardY, boardX));
+                        if (board.getCellColor(boardY, boardX) != null) {
+                            System.out.println("Game Over due to overlap during settle");
+                            board.setGameOver(true);
+                            return; // Exit the settle method
+                        }
                         board.setCellColor(boardY, boardX, color);
                     } else {
-                        System.out.println("Game Over");
-                        // Game over condition
+                        System.out.println("Game Over due to boardY < 0");
                         board.setGameOver(true);
+                        return; // Exit the settle method
                     }
                 }
             }
@@ -187,7 +196,13 @@ public class TetrisShapeInstance {
         board.clearFullLines();
 
         // Spawn a new shape
-        spawnNewShape();
+        // **Add this game over check**
+        if (collidesAt(board.getWidth() / 2 - coords[0].length / 2, -1)) {
+            System.out.println("Game Over on spawn");
+            board.setGameOver(true);
+        } else {
+            spawnNewShape();
+        }
     }
 
     public void render(Graphics g) {
