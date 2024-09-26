@@ -9,9 +9,9 @@ import util.AudioManager;
 import util.UIUtils;
 
 import javax.swing.*;
-import java.awt.*;
+        import java.awt.*;
 
-public class PlayPanel extends AbstractPanel implements ConfigObserver {
+public class PlayPanel extends AbstractPanel implements ConfigObserver, GameController.GameOverListener {
     private MetaConfig config;
     private JLabel statusLabel;
     private JPanel mainArea;
@@ -52,41 +52,23 @@ public class PlayPanel extends AbstractPanel implements ConfigObserver {
         linesErasedLabels = new JLabel[numPlayers];
         scoreLabels = new JLabel[numPlayers];
 
-//        long seed = System.currentTimeMillis();
-//        TetrominoSequence tetrominoSequence = new TetrominoSequence(seed);
-
+        // Create a single TetrominoSequence instance for both players
         TetrominoSequence tetrominoSequence = new TetrominoSequence();
 
         if (!config.isExtendModeEnabled()) {
-            mainArea.setLayout(new GridBagLayout());
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            gbc.anchor = GridBagConstraints.CENTER;
+            // Single-player setup
             JPanel player1Panel = createPlayerPanel(1, tetrominoSequence);
-            mainArea.add(player1Panel, gbc);
+            mainArea.add(player1Panel);
         } else {
-            mainArea.setLayout(new GridBagLayout());
-            GridBagConstraints gbc = new GridBagConstraints();
-
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            gbc.anchor = GridBagConstraints.CENTER;
-            gbc.insets = new Insets(0, 0, 0, 10);
-            JPanel player2Panel = createPlayerPanel(2, tetrominoSequence);
-            mainArea.add(player2Panel, gbc);
-
-            gbc.gridx = 1;
-            gbc.gridy = 0;
-            gbc.anchor = GridBagConstraints.CENTER;
-            gbc.insets = new Insets(0, 10, 0, 0);
+            // Multiplayer setup
             JPanel player1Panel = createPlayerPanel(1, tetrominoSequence);
-            mainArea.add(player1Panel, gbc);
+            JPanel player2Panel = createPlayerPanel(2, tetrominoSequence);
+            mainArea.add(player2Panel);
+            mainArea.add(player1Panel);
         }
 
-        // revalidate() tells the Swing system to recalculate the layout of the mainArea JPanel.
+        // Revalidate and repaint the main area
         mainArea.revalidate();
-        // repaint() tells the system to redraw the container.
         mainArea.repaint();
 
         // Start background music if music is enabled
@@ -102,7 +84,6 @@ public class PlayPanel extends AbstractPanel implements ConfigObserver {
     @Override
     public void update() {
         statusLabel.setText(getStatusText());
-        System.out.println("StatusLabel" + statusLabel);
     }
 
     private String getStatusText() {
@@ -174,7 +155,8 @@ public class PlayPanel extends AbstractPanel implements ConfigObserver {
                 config.getGameLevel(),
                 playerNumber,
                 tetrominoSequence,
-                nextTetrominoPanel // Pass the panel here
+                nextTetrominoPanel, // Pass the panel here
+                this // Pass the PlayPanel as the GameOverListener
         );
         gameControllers[playerNumber - 1] = gameController;
         gameController.startGame();
@@ -279,6 +261,7 @@ public class PlayPanel extends AbstractPanel implements ConfigObserver {
         if (allGamesOver) {
             // All games are over, go back to main menu directly
             MainFrame.MAIN_FRAME.showScreen("Main");
+            config.saveConfig();
             // Stop background music
             AudioManager.stopBackgroundMusic();
         } else {
@@ -301,6 +284,7 @@ public class PlayPanel extends AbstractPanel implements ConfigObserver {
 
             if (choice == JOptionPane.YES_OPTION) {
                 MainFrame.MAIN_FRAME.showScreen("Main");
+                config.saveConfig();
                 // Stop background music
                 AudioManager.stopBackgroundMusic();
             } else {
@@ -310,6 +294,16 @@ public class PlayPanel extends AbstractPanel implements ConfigObserver {
                         gameControllers[i].resumeGame(); // Resume if it was playing before
                     } // Else, do nothing; the game remains paused
                 }
+            }
+        }
+    }
+
+    @Override
+    public void onGameOver(GameController controller) {
+        // Pause all other games
+        for (GameController gc : gameControllers) {
+            if (gc != controller) {
+                gc.pauseGame();
             }
         }
     }

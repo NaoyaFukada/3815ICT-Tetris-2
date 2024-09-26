@@ -57,7 +57,7 @@ public class MainPanel extends JPanel {
         // Action listener for high score button
         this.highScoreButton.addActionListener(e -> {
             // Show the "HighScore" screen on MainFrame
-            MainFrame.MAIN_FRAME.showScreen("High Score Panel");
+            MainFrame.MAIN_FRAME.showScreen("High Score");
         });
 
         this.add(Box.createVerticalStrut(20));

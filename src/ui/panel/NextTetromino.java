@@ -9,7 +9,7 @@ public class NextTetromino extends JPanel {
 
     private TetrisShape nextShape;
 
-    public NextTetromino(){
+    public NextTetromino() {
         // Initialization if needed
     }
 
@@ -28,7 +28,10 @@ public class NextTetromino extends JPanel {
             Color color = nextShape.getColor();
 
             // Determine cell size based on panel size and shape dimensions
-            int cellSize = Math.min(getWidth() / coords[0].length, getHeight() / coords.length);
+            int maxCellWidth = getWidth() / coords[0].length;
+            int maxCellHeight = getHeight() / coords.length;
+            int cellSize = Math.min(maxCellWidth, maxCellHeight);
+            cellSize = (int) (cellSize * 0.6); // Reduce size to 80%
 
             int xOffset = (getWidth() - coords[0].length * cellSize) / 2;
             int yOffset = (getHeight() - coords.length * cellSize) / 2;

@@ -42,7 +42,6 @@ public class MainFrame extends JFrame {
         );
 
         if (choice == JOptionPane.YES_OPTION) {
-//            CommFun.closeSound(); // Close any sound resources
             System.exit(0); // Exit the program
         }
     }
@@ -166,7 +165,7 @@ public class MainFrame extends JFrame {
         this.containerPanel.add(mainPanel, "Main");
         this.containerPanel.add(this.playPanel, "Play");
         this.containerPanel.add(configurePanel, "Configuration");
-        this.containerPanel.add(highScorePanel, "High Score Panel");
+        this.containerPanel.add(highScorePanel, "High Score");
     }
 
     private void adjustSizeForPanel(String panelName) {
@@ -180,6 +179,8 @@ public class MainFrame extends JFrame {
             case "Configuration":
                 this.setSize(600, 500);
                 break;
+            case "High Score":
+                this.setSize(450, 500);
             default:
                 this.setSize(600, 679);
         }

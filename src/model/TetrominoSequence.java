@@ -1,34 +1,58 @@
 package model;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import model.factory.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class TetrominoSequence {
-    private Queue<TetrisShape> sequence;
+    private List<TetrominoFactory> factories;
+    private List<TetrisShape> sequence;
     private Random random;
 
-    // This is called from PlayPanel
     public TetrominoSequence() {
-//        random = new Random(seed);
-        random = new Random();
-        sequence = new LinkedList<>();
-        generateNextShapes(1000);
+        factories = new ArrayList<>();
+        factories.add(new ITetrominoFactory());
+        factories.add(new OTetrominoFactory());
+        factories.add(new TTetrominoFactory());
+        factories.add(new STetrominoFactory());
+        factories.add(new ZTetrominoFactory());
+        factories.add(new LTetrominoFactory());
+        factories.add(new JTetrominoFactory());
+
+        random = new Random(0); // Use a fixed seed for determinism
+        sequence = new ArrayList<>();
+        generateInitialSequence();
     }
 
-    private void generateNextShapes(int count) {
-        TetrisShape[] shapes = TetrisShape.values();
-        for (int i = 0; i < count; i++) {
-            TetrisShape shape = shapes[random.nextInt(shapes.length)];
-            sequence.add(shape);
+    private void generateInitialSequence() {
+        // Generate an initial sequence of tetrominoes
+        // You can adjust the size as needed
+        int initialSize = 1000;
+        generateMoreShapes(initialSize);
+    }
+
+    private void generateMoreShapes(int count) {
+        List<TetrominoFactory> bag = new ArrayList<>(factories);
+
+        while (count > 0) {
+            if (bag.isEmpty()) {
+                bag.addAll(factories);
+                Collections.shuffle(bag, random);
+            }
+            TetrominoFactory factory = bag.remove(0);
+            sequence.add(factory.createTetromino());
+            count--;
         }
     }
 
-    // This is where to access to get next shape
-    public synchronized TetrisShape getNextShape() {
-        if (sequence.isEmpty()) {
-            generateNextShapes(1000);
+    public synchronized TetrisShape getShapeAt(int index) {
+        // Ensure the sequence is long enough
+        while (index >= sequence.size()) {
+            // Generate more shapes as needed
+            generateMoreShapes(7); // Generate in batches of 7 (a full bag)
         }
-        return sequence.poll();
+        return sequence.get(index);
     }
 }

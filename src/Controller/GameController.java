@@ -11,19 +11,22 @@ import javax.swing.*;
 public class GameController implements Runnable, NextShapeListener {
     private Board board;
     private TetrisShapeInstance currentShape;
-    private Timer timer;
     private GameBoard gameBoardPanel;
     private int playerNumber;
     private Game game;
     private boolean running = false;
     private TetrominoSequence tetrominoSequence;
     private NextTetromino nextTetrominoPanel;
+    private GameOverListener gameOverListener;
 
-    public GameController(int width, int height, int initialLevel, int playerNumber, TetrominoSequence tetrominoSequence, NextTetromino nextTetrominoPanel) {
+    public GameController(int width, int height, int initialLevel, int playerNumber,
+                          TetrominoSequence tetrominoSequence, NextTetromino nextTetrominoPanel,
+                          GameOverListener gameOverListener) {
         this.playerNumber = playerNumber;
         this.board = new Board(width, height);
         this.tetrominoSequence = tetrominoSequence;
         this.nextTetrominoPanel = nextTetrominoPanel;
+        this.gameOverListener = gameOverListener;
 
         // Initialize the game model
         this.game = new Game(board, initialLevel, tetrominoSequence);
@@ -39,12 +42,6 @@ public class GameController implements Runnable, NextShapeListener {
 
         // Update the NextTetromino panel with the initial next shape
         nextTetrominoPanel.setNextShape(game.peekNextShape());
-
-        // Initialize the game loop timer for Player 1
-        if (playerNumber == 1) {
-            int delay = 20; // Adjust the delay as needed (milliseconds)
-            timer = new Timer(delay, e -> gameLoop());
-        }
     }
 
     private void gameLoop() {
@@ -52,9 +49,7 @@ public class GameController implements Runnable, NextShapeListener {
             currentShape.update();
             gameBoardPanel.repaint();
         } else if (board.isGameOver()) {
-            if (timer != null) {
-                timer.stop();
-            }
+            running = false;
             handleGameOver();
         }
     }
@@ -84,6 +79,10 @@ public class GameController implements Runnable, NextShapeListener {
         }
 
         SwingUtilities.invokeLater(() -> {
+            if (gameOverListener != null) {
+                gameOverListener.onGameOver(this);
+            }
+
             int finalScore = game.getScore();
             JOptionPane.showMessageDialog(gameBoardPanel, "Game Over for Player " + playerNumber + "!\nScore: " + finalScore);
 
@@ -99,21 +98,14 @@ public class GameController implements Runnable, NextShapeListener {
     }
 
     public void startGame() {
-        if (playerNumber == 2) {
-            running = true;
-            Thread thread = new Thread(this);
-            thread.start();
-        } else {
-            timer.start();
-        }
+        running = true;
+        Thread thread = new Thread(this);
+        thread.start();
     }
 
     public void pauseGame() {
         if (!game.isPaused()) {
             game.pauseGame();
-            if (timer != null) {
-                timer.stop();
-            }
             gameBoardPanel.repaint();
         }
     }
@@ -121,24 +113,12 @@ public class GameController implements Runnable, NextShapeListener {
     public void resumeGame() {
         if (game.isPaused()) {
             game.resumeGame();
-            if (timer != null) {
-                timer.start();
-            }
             gameBoardPanel.repaint();
         }
     }
 
     public void togglePauseGame() {
         game.togglePauseGame();
-        if (game.isPaused()) {
-            if (timer != null) {
-                timer.stop();
-            }
-        } else {
-            if (timer != null) {
-                timer.start();
-            }
-        }
         gameBoardPanel.repaint();
     }
 
@@ -195,5 +175,10 @@ public class GameController implements Runnable, NextShapeListener {
     public void onNextShapeChanged(TetrisShape nextShape) {
         // Update the NextTetromino panel
         SwingUtilities.invokeLater(() -> nextTetrominoPanel.setNextShape(nextShape));
+    }
+
+    // Interface for game over listener
+    public interface GameOverListener {
+        void onGameOver(GameController controller);
     }
 }

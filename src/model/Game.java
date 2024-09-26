@@ -13,20 +13,21 @@ public class Game {
     private int currentLevel;
     private int initialLevel;
     private TetrisShapeInstance currentShapeInstance;
-    private Board modelBoard;
+    private Board board;
     private TetrominoSequence tetrominoSequence;
 
     private TetrisShape nextShape;
     private NextShapeListener nextShapeListener;
+    private int tetrominoIndex = 0; // Index into the tetromino sequence
 
     public Game(Board board, int initialLevel, TetrominoSequence tetrominoSequence) {
         this.initialLevel = initialLevel;
         this.currentLevel = initialLevel;
-        this.modelBoard = board;
+        this.board = board;
         this.tetrominoSequence = tetrominoSequence;
 
         // Initialize nextShape
-        this.nextShape = tetrominoSequence.getNextShape();
+        this.nextShape = tetrominoSequence.getShapeAt(tetrominoIndex++);
         setCurrentShape();
     }
 
@@ -37,7 +38,7 @@ public class Game {
     }
 
     public void setCurrentShape() {
-        currentShapeInstance = new TetrisShapeInstance(this.modelBoard, this.initialLevel, this);
+        currentShapeInstance = new TetrisShapeInstance(this.board, this.initialLevel, this);
     }
 
     public void incrementLinesErased(int linesCleared) {
@@ -79,7 +80,7 @@ public class Game {
 
     public TetrisShape getNextShape() {
         TetrisShape shapeToReturn = nextShape;
-        nextShape = tetrominoSequence.getNextShape();
+        nextShape = tetrominoSequence.getShapeAt(tetrominoIndex++);
         if (nextShapeListener != null) {
             nextShapeListener.onNextShapeChanged(nextShape);
         }

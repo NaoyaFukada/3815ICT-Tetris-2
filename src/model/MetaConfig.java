@@ -16,7 +16,7 @@ import java.util.List;
  * Implements the Observer pattern to notify registered observers of changes.
  */
 public class MetaConfig {
-    private static final String CONFIG_FILE_PATH = "config.json"; // Path to the configuration file
+    private static final String CONFIG_FILE_PATH = "src/resources/data/config.json"; // Path to the configuration file
     private static MetaConfig instance; // Singleton instance
 
     // Transient to prevent Gson from serializing the observers list

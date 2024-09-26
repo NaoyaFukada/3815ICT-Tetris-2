@@ -10,19 +10,22 @@ import java.util.List;
 
 public class HighScorePanel extends AbstractPanel {
 
+    private HighScoreManager highScoreManager;
+
     public HighScorePanel() {
         super("High Scores");
+        highScoreManager = HighScoreManager.getInstance();
         initContentPanel();
     }
 
     @Override
     protected void initContentPanel() {
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS)); // Vertically align the labels
+        contentPanel.removeAll(); // Clear existing content
 
         contentPanel.add(Box.createVerticalStrut(20)); // Add some space below the title
 
         // Load high scores from HighScoreManager
-        HighScoreManager highScoreManager = HighScoreManager.getInstance();
         List<ScoreEntry> highScores = highScoreManager.getHighScores();
 
         // Get an instance of UIUtils
@@ -32,13 +35,17 @@ public class HighScorePanel extends AbstractPanel {
         if (highScores != null && !highScores.isEmpty()) {
             int rank = 1;
             for (ScoreEntry entry : highScores) {
-                JLabel scoreLabel = uiUtils.createScoreLabel(rank, entry.getName(), entry.getScore());
+                JLabel scoreLabel = new JLabel(String.format("%d. %s - %d", rank, entry.getName(), entry.getScore()));
+                scoreLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+                scoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
                 contentPanel.add(scoreLabel);
                 contentPanel.add(Box.createVerticalStrut(10));
                 rank++;
             }
         } else {
-            JLabel noScoresLabel = uiUtils.createNoScoresLabel();
+            JLabel noScoresLabel = new JLabel("No high scores available.");
+            noScoresLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+            noScoresLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             contentPanel.add(noScoresLabel);
         }
 
@@ -54,7 +61,6 @@ public class HighScorePanel extends AbstractPanel {
             if (choice == JOptionPane.YES_OPTION) {
                 highScoreManager.clearScores();
                 // Update the display
-                contentPanel.removeAll();
                 initContentPanel();
                 contentPanel.revalidate();
                 contentPanel.repaint();
@@ -63,4 +69,14 @@ public class HighScorePanel extends AbstractPanel {
         contentPanel.add(clearButton);
     }
 
+    @Override
+    public void setVisible(boolean aFlag) {
+        super.setVisible(aFlag);
+        if (aFlag) {
+            // Refresh the content when the panel becomes visible
+            initContentPanel();
+            contentPanel.revalidate();
+            contentPanel.repaint();
+        }
+    }
 }

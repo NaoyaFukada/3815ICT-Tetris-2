@@ -59,7 +59,7 @@ public class GameBoard extends JPanel {
 
             // Draw the pause message on two lines
             g.setColor(Color.WHITE);
-            g.setFont(new Font("Arial", Font.BOLD, 14));
+            g.setFont(new Font("Arial", Font.BOLD, 10));
             String message1 = "Game is paused.";
             String message2 = "Press 'P' to continue.";
 
