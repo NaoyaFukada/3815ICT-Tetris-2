@@ -99,6 +99,7 @@ public class MainFrame extends JFrame {
                 MainFrame.this.playPanel.receiveKey(4);  // P key (pause)
             }
         };
+
         Action musicAction = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
                 MainFrame.this.playPanel.receiveKey(5);  // M key (toggle music)

@@ -17,7 +17,7 @@ public class GameBoard extends JPanel {
     public GameBoard(Board board, TetrisShapeInstance currentShape, Game game) {
         this.board = board;
         this.currentShape = currentShape;
-        this.game = game; // Add this line
+        this.game = game;
 
         // Set the preferred size
         int width = board.getWidth() * CELL_SIZE;
@@ -59,7 +59,7 @@ public class GameBoard extends JPanel {
 
             // Draw the pause message on two lines
             g.setColor(Color.WHITE);
-            g.setFont(new Font("Arial", Font.BOLD, 10));
+            g.setFont(new Font("Arial", Font.BOLD, 14));
             String message1 = "Game is paused.";
             String message2 = "Press 'P' to continue.";
 
