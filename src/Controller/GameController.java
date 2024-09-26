@@ -18,15 +18,24 @@ public class GameController implements Runnable, NextShapeListener {
     private TetrominoSequence tetrominoSequence;
     private NextTetromino nextTetrominoPanel;
     private GameOverListener gameOverListener;
+    private PlayerType playerType;
+    private TetrisAI ai;
+    private Move bestMove;
+    private TetrisShapeInstance previousShapeInstance;
 
     public GameController(int width, int height, int initialLevel, int playerNumber,
                           TetrominoSequence tetrominoSequence, NextTetromino nextTetrominoPanel,
-                          GameOverListener gameOverListener) {
+                          GameOverListener gameOverListener, PlayerType playerType) {
         this.playerNumber = playerNumber;
         this.board = new Board(width, height);
         this.tetrominoSequence = tetrominoSequence;
         this.nextTetrominoPanel = nextTetrominoPanel;
         this.gameOverListener = gameOverListener;
+        this.playerType = playerType;
+
+        if (playerType == PlayerType.AI) {
+            ai = new TetrisAI();
+        }
 
         // Initialize the game model
         this.game = new Game(board, initialLevel, tetrominoSequence);
@@ -44,33 +53,61 @@ public class GameController implements Runnable, NextShapeListener {
         nextTetrominoPanel.setNextShape(game.peekNextShape());
     }
 
-    private void gameLoop() {
-        if (!board.isGameOver() && !game.isPaused()) {
-            currentShape.update();
-            gameBoardPanel.repaint();
-        } else if (board.isGameOver()) {
-            running = false;
-            handleGameOver();
-        }
-    }
-
     @Override
     public void run() {
         while (running) {
             if (!board.isGameOver() && !game.isPaused()) {
-                currentShape.update();
-                SwingUtilities.invokeLater(() -> gameBoardPanel.repaint());
+                if (playerType == PlayerType.AI) {
+                    if (currentShape != previousShapeInstance) {
+                        previousShapeInstance = currentShape;
+                        bestMove = ai.findBestMove(board, currentShape.getTetrisShape());
+                    }
+                    aiMove();
+                } else {
+                    currentShape.update();
+                    SwingUtilities.invokeLater(() -> gameBoardPanel.repaint());
+                }
             } else if (board.isGameOver()) {
                 running = false;
                 handleGameOver();
             }
             try {
-                Thread.sleep(20);
+                Thread.sleep(50); // Adjusted sleep time
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
+
+    private void aiMove() {
+        if (bestMove == null) {
+            bestMove = ai.findBestMove(board.copy(), currentShape.getTetrisShape());
+            if (bestMove == null) {
+                // No valid move found
+                System.out.println("AI could not find a valid move.");
+                // Handle as needed, perhaps end the game
+                return;
+            }
+        }
+
+        if (currentShape.getRotationState() != bestMove.rotation) {
+            currentShape.rotate();
+        } else if (currentShape.getX() < bestMove.column) {
+            currentShape.moveRight();
+        } else if (currentShape.getX() > bestMove.column) {
+            currentShape.moveLeft();
+        } else {
+            // At desired position and rotation
+            currentShape.speedUp();
+            // Reset bestMove for the next piece
+            bestMove = null;
+        }
+
+        // Update the shape
+        currentShape.update();
+        SwingUtilities.invokeLater(() -> gameBoardPanel.repaint());
+    }
+
 
     private void handleGameOver() {
         // Play game over sound if sound is enabled

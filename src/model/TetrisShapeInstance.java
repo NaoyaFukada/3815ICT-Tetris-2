@@ -23,6 +23,12 @@ public class TetrisShapeInstance {
     private long timeOfLastCollision = 0;   // Time when collision was detected
     private final int collisionDelay = 100; // Delay in milliseconds before settling
 
+    // Added variables
+    private int rotationState = 0;
+
+    // **New field to store the TetrisShape**
+    private TetrisShape tetrisShape;
+
     public TetrisShapeInstance(Board board, int initialLevel, Game game) {
         this.board = board;
         this.game = game;
@@ -41,7 +47,7 @@ public class TetrisShapeInstance {
     public void spawnNewShape() {
         // Get the next shape from the game's tetromino sequence
         TetrisShape shape = game.getNextShape();
-
+        this.tetrisShape = shape; // **Store the reference**
         this.coords = shape.getShape();
         this.color = shape.getColor();
 
@@ -51,6 +57,9 @@ public class TetrisShapeInstance {
         this.progress = 0;
         this.collision = false;
         this.isWaiting = false;
+
+        // Reset rotation state
+        rotationState = 0;
     }
 
     public boolean update() {
@@ -96,6 +105,10 @@ public class TetrisShapeInstance {
         return true;
     }
 
+    public TetrisShape getTetrisShape() {
+        return tetrisShape;
+    }
+
     public void moveLeft() {
         if (!collidesAt(x - 1, y)) {
             x--;
@@ -120,6 +133,7 @@ public class TetrisShapeInstance {
         int[][] rotatedShape = rotateMatrix(coords);
         if (!collidesAt(x, y, rotatedShape)) {
             coords = rotatedShape;
+            rotationState = (rotationState + 1) % 4;
             if (!collidesAt(x, y + 1)) {
                 collision = false;
                 isWaiting = false;
@@ -232,7 +246,7 @@ public class TetrisShapeInstance {
 
     // Speed up the falling when the down key is pressed
     public void speedUp() {
-        progress += progressIncrement * 3;
+        progress += 100;
         // Check collision immediately after speeding up
         while (progress >= progressThreshold) {
             progress -= progressThreshold;
@@ -250,5 +264,18 @@ public class TetrisShapeInstance {
             collision = true;
             settle();
         }
+    }
+
+    // Getter methods
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getRotationState() {
+        return rotationState;
     }
 }

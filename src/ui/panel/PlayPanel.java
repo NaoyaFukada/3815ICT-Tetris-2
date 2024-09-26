@@ -3,6 +3,7 @@ package ui.panel;
 import Controller.GameController;
 import model.ConfigObserver;
 import model.MetaConfig;
+import model.PlayerType;
 import model.TetrominoSequence;
 import ui.MainFrame;
 import util.AudioManager;
@@ -111,16 +112,10 @@ public class PlayPanel extends AbstractPanel implements ConfigObserver, GameCont
 
         JLabel playerInfoLabel = UIUtils.getInstance().createNormalLabel("Game Info (Player " + playerNumber + ")", new Font("Arial", Font.BOLD, 16));
 
-        String playerType;
-        if (playerNumber == 1) {
-            playerType = "Player Type: " + config.getPlayerOneType();
-        } else if (playerNumber == 2) {
-            playerType = "Player Type: " + config.getPlayerTwoType();
-        } else {
-            playerType = "Player Type: UNKNOWN";
-        }
+        PlayerType playerType = (playerNumber == 1) ? config.getPlayerOneType() : config.getPlayerTwoType();
+        String playerTypeText = "Player Type: " + playerType;
 
-        JLabel playerTypeLabel = new JLabel(playerType);
+        JLabel playerTypeLabel = new JLabel(playerTypeText);
         JLabel initLevelLabel = new JLabel("Initial Level: " + config.getGameLevel());
         JLabel currentLevelLabel = new JLabel("Current Level: 1");
         JLabel linesErasedLabel = new JLabel("Lines Erased: 0");
@@ -156,7 +151,8 @@ public class PlayPanel extends AbstractPanel implements ConfigObserver, GameCont
                 playerNumber,
                 tetrominoSequence,
                 nextTetrominoPanel, // Pass the panel here
-                this // Pass the PlayPanel as the GameOverListener
+                this, // Pass the PlayPanel as the GameOverListener
+                playerType // Pass the playerType here
         );
         gameControllers[playerNumber - 1] = gameController;
         gameController.startGame();
@@ -174,6 +170,7 @@ public class PlayPanel extends AbstractPanel implements ConfigObserver, GameCont
 
         return playerPanel;
     }
+
 
     private void updateGameInfo() {
         for (int i = 0; i < gameControllers.length; i++) {

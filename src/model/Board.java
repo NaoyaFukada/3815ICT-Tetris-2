@@ -80,4 +80,14 @@ public class Board {
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
     }
+
+    public Board copy() {
+        Board newBoard = new Board(this.width, this.height);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                newBoard.cells[y][x] = this.cells[y][x];
+            }
+        }
+        return newBoard;
+    }
 }
