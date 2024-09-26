@@ -7,6 +7,9 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
 
+
+// this class exists for the singleton design example
+
 public class HighScoreManager {
     private static HighScoreManager instance;
     private static final String FILE_NAME = System.getProperty("user.home") + File.separator + "tetris_highscores.json";
