@@ -9,7 +9,7 @@ import java.awt.*;
 public class HighScorePanel extends AbstractPanel {
 
     public HighScorePanel() {
-        super("High Scores");  // Call the AbstractPanel constructor with the title
+        super("High Scores");  // Call the AbstractPanel constructor for the title
         initContentPanel();    // Initialize specific content for this panel
     }
 

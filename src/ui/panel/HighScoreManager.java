@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.List;
 
+// this panel exists for singleton design example
 public class HighScoreManager {
     private static HighScoreManager instance;
     private List<HighScoreEntry> highScores;
@@ -25,6 +26,7 @@ public class HighScoreManager {
         return instance;
     }
 
+
     // Method to load high scores from the JSON file
     private void loadHighScores() {
         Gson gson = new Gson();
@@ -35,6 +37,7 @@ public class HighScoreManager {
                 System.out.println("Could not find the highscores.json file.");
                 return;
             }
+
 
             InputStreamReader reader = new InputStreamReader(inputStream);
             Type highScoreListType = new TypeToken<List<HighScoreEntry>>() {}.getType();
