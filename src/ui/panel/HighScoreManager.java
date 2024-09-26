@@ -7,6 +7,7 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
 
+
 // this class exists for the singleton design example
 
 public class HighScoreManager {
