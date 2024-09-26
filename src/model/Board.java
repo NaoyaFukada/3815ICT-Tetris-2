@@ -1,5 +1,7 @@
 package model;
 
+import util.AudioManager;
+
 import java.awt.Color;
 
 public class Board {
@@ -29,7 +31,8 @@ public class Board {
         cells[row][col] = color;
     }
 
-    public void clearFullLines() {
+    public int clearFullLines() {
+        int linesCleared = 0;
         for (int row = height - 1; row >= 0; row--) {
             boolean fullLine = true;
             for (int col = 0; col < width; col++) {
@@ -41,8 +44,13 @@ public class Board {
             if (fullLine) {
                 removeLine(row);
                 row++; // Check the same line again after removal
+                linesCleared++;
             }
         }
+        if (linesCleared > 0 && MetaConfig.getInstance().isSoundEnabled()) {
+            AudioManager.playSoundEffect("erase-line");
+        }
+        return linesCleared;
     }
 
     private void removeLine(int line) {

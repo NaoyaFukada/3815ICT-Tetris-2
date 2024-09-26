@@ -64,6 +64,23 @@ public class UIUtils {
         return new JLabel(value);
     }
 
+    // Method to create high score labels
+    public JLabel createScoreLabel(int rank, String name, int score) {
+        String text = rank + ". " + name + " - " + score;
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("Arial", Font.PLAIN, 18));
+        label.setAlignmentX(Component.CENTER_ALIGNMENT); // Center align the label
+        return label;
+    }
+
+    // Method to create a "No High Scores" label
+    public JLabel createNoScoresLabel() {
+        JLabel label = new JLabel("No high scores available.");
+        label.setFont(new Font("Arial", Font.PLAIN, 18));
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        return label;
+    }
+
     // Method to create buttons
     public JButton createButton(String text) {
         JButton button = new JButton(text);

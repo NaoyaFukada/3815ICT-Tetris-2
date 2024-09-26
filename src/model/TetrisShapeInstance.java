@@ -3,8 +3,6 @@ package model;
 import ui.panel.GameBoard;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.Random;
 
 public class TetrisShapeInstance {
     private int x;             // Grid X position
@@ -12,10 +10,11 @@ public class TetrisShapeInstance {
     private int[][] coords;    // Shape coordinates
     private Color color;       // Shape color
     private Board board;       // Reference to the game board
+    private Game game;         // Reference to the game
 
     // Variables for smooth movement
     private double progress = 0;            // Progress towards next row
-    private final double progressIncrement; // Increment per update
+    private double progressIncrement;       // Increment per update
     private final double progressThreshold; // Threshold to move down a row
 
     // Collision handling
@@ -24,24 +23,26 @@ public class TetrisShapeInstance {
     private long timeOfLastCollision = 0;   // Time when collision was detected
     private final int collisionDelay = 100; // Delay in milliseconds before settling
 
-    public TetrisShapeInstance(Board board, int initialLevel) {
+    public TetrisShapeInstance(Board board, int initialLevel, Game game) {
         this.board = board;
+        this.game = game;
 
         // Adjust these values to control speed and smoothness
         this.progressThreshold = 100;
-        this.progressIncrement = 5 + initialLevel * 1.5;
+        updateSpeed();
 
         spawnNewShape();
     }
 
+    private void updateSpeed() {
+        this.progressIncrement = 5 + game.getCurrentLevel() * 1.5;
+    }
+
     public void spawnNewShape() {
-        // Randomly select a shape
-        TetrisShape[] shapes = TetrisShape.values();
-        Random random = new Random();
-        TetrisShape shape = shapes[random.nextInt(shapes.length)];
+        // Get the next shape from the game's tetromino sequence
+        TetrisShape shape = game.getNextShape();
 
         this.coords = shape.getShape();
-        System.out.println(Arrays.deepToString(coords));
         this.color = shape.getColor();
 
         // Start position (top-middle of the board)
@@ -53,6 +54,8 @@ public class TetrisShapeInstance {
     }
 
     public boolean update() {
+        updateSpeed();
+
         if (board.isGameOver()) {
             return false;
         }
@@ -87,7 +90,6 @@ public class TetrisShapeInstance {
 
         // Perform immediate collision check
         if (collidesAt(x, y + 1)) {
-            System.out.println("collidesAt(x, y + 1)");
             collision = true;
         }
 
@@ -142,7 +144,7 @@ public class TetrisShapeInstance {
         return collidesAt(newX, newY, coords);
     }
 
-    private boolean collidesAt ( int newX, int newY, int[][] shape){
+    private boolean collidesAt(int newX, int newY, int[][] shape) {
         for (int r = 0; r < shape.length; r++) {
             for (int c = 0; c < shape[0].length; c++) {
                 if (shape[r][c] != 0) {
@@ -177,15 +179,12 @@ public class TetrisShapeInstance {
                     int boardX = x + c;
                     int boardY = y + r;
                     if (boardY >= 0) {
-                        System.out.println(board.getCellColor(boardY, boardX));
                         if (board.getCellColor(boardY, boardX) != null) {
-                            System.out.println("Game Over due to overlap during settle");
                             board.setGameOver(true);
                             return; // Exit the settle method
                         }
                         board.setCellColor(boardY, boardX, color);
                     } else {
-                        System.out.println("Game Over due to boardY < 0");
                         board.setGameOver(true);
                         return; // Exit the settle method
                     }
@@ -193,19 +192,23 @@ public class TetrisShapeInstance {
             }
         }
 
-        // Clear full lines
-        board.clearFullLines();
+        // Clear full lines and get the number of lines cleared
+        int linesCleared = board.clearFullLines();
 
-        // Spawn a new shape
-        // **Add this game over check**
+        // Update the game score and lines erased
+        game.incrementLinesErased(linesCleared);
+        game.updateScore(linesCleared);
+
+        // Check if the level should be increased
+        game.checkLevelUp();
+
+        // Spawn a new shape or end the game
         if (collidesAt(board.getWidth() / 2 - coords[0].length / 2, -1)) {
-            System.out.println("Game Over on spawn");
             board.setGameOver(true);
         } else {
             spawnNewShape();
         }
     }
-
 
     public void render(Graphics g) {
         int yOffset = (int) ((progress * GameBoard.CELL_SIZE) / progressThreshold);
@@ -243,11 +246,9 @@ public class TetrisShapeInstance {
                 return;
             }
         }
-        System.out.println(y + 1);
         if (collidesAt(x, y + 1)) {
             collision = true;
             settle();
-            System.out.println("settled");
         }
     }
 }
