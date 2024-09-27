@@ -1,30 +1,21 @@
-package model.facade;
-
-import model.ScoreManager;
+package util;
 
 public class ScoreFacade {
 
-    private ScoreManager scoreManager;
-
-    // Constructor that initializes ScoreManager
-    public ScoreFacade() {
-        this.scoreManager = new ScoreManager();
-    }
+    private int score = 0;
 
     // Method to reset the score
     public void resetScore() {
-        scoreManager.resetScore();
-        System.out.println("Score has been reset.");
+        score = 0;
     }
 
     // Method to add points to the score
     public void addScore(int points) {
-        scoreManager.addScore(points);
-        System.out.println("Added " + points + " points. Current score: " + scoreManager.getScore());
+        score += points;
     }
 
     // Method to get the current score
     public int getScore() {
-        return scoreManager.getScore();
+        return score;
     }
 }

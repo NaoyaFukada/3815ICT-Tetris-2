@@ -1,5 +1,6 @@
 package model;
 
+import util.ScoreFacade;
 import util.AudioManager;
 
 public class Game {
@@ -8,7 +9,6 @@ public class Game {
     public static final int STATE_GAME_OVER = 2;
 
     private int state = STATE_GAME_PLAY;
-    private int score = 0;
     private int linesErased = 0;
     private int currentLevel;
     private int initialLevel;
@@ -20,11 +20,17 @@ public class Game {
     private NextShapeListener nextShapeListener;
     private int tetrominoIndex = 0; // Index into the tetromino sequence
 
+    // Use ScoreFacade instead of direct score handling
+    private ScoreFacade scoreFacade;
+
     public Game(Board board, int initialLevel, TetrominoSequence tetrominoSequence) {
         this.initialLevel = initialLevel;
         this.currentLevel = initialLevel;
         this.board = board;
         this.tetrominoSequence = tetrominoSequence;
+
+        // Initialize ScoreFacade
+        this.scoreFacade = new ScoreFacade();
 
         // Initialize nextShape
         this.nextShape = tetrominoSequence.getShapeAt(tetrominoIndex++);
@@ -53,7 +59,9 @@ public class Game {
             case 3: points = 600; break;
             case 4: points = 1000; break;
         }
-        score += points;
+
+        // Use ScoreFacade to update the score
+        scoreFacade.addScore(points);
     }
 
     public void checkLevelUp() {
@@ -75,7 +83,8 @@ public class Game {
     }
 
     public int getScore() {
-        return score;
+        // Use ScoreFacade to get the current score
+        return scoreFacade.getScore();
     }
 
     public TetrisShape getNextShape() {
