@@ -13,13 +13,9 @@ public class TetrominoSequence {
 
     public TetrominoSequence() {
         factories = new ArrayList<>();
-        factories.add(new ITetrominoFactory());
-        factories.add(new OTetrominoFactory());
-        factories.add(new TTetrominoFactory());
-        factories.add(new STetrominoFactory());
-        factories.add(new ZTetrominoFactory());
-        factories.add(new LTetrominoFactory());
-        factories.add(new JTetrominoFactory());
+        for (TetrominoType type : TetrominoType.values()) {
+            factories.add(TetrominoFactoryProducer.getFactory(type));
+        }
 
         random = new Random(0); // Use a fixed seed for determinism
         sequence = new ArrayList<>();
