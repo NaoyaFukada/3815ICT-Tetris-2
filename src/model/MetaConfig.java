@@ -147,10 +147,19 @@ public class MetaConfig {
         return fieldWidth;
     }
 
+//    public void setFieldWidth(int fieldWidth) {
+//        this.fieldWidth = fieldWidth;
+//        notifyObservers(); // Notify observers when value changes
+//    }
+
     public void setFieldWidth(int fieldWidth) {
+        if (fieldWidth < 5 || fieldWidth > 40) {
+            throw new IllegalArgumentException("Field width must be between 5 and 40.");
+        }
         this.fieldWidth = fieldWidth;
         notifyObservers(); // Notify observers when value changes
     }
+
 
     public int getFieldHeight() {
         return fieldHeight;
