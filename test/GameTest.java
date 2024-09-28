@@ -1,52 +1,71 @@
-import static org.junit.Assert.*;
-
+import model.Board;
 import model.Game;
+import model.TetrominoSequence;
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class GameTest {
 
     private Game game;
+    private Board board;
+    private TetrominoSequence sequence;
 
     @Before
     public void setUp() {
-        game = new Game();
+        // Initialize the required objects for Game
+        board = new Board(10, 20);  // Assuming Board has a constructor that takes width and height
+        sequence = new TetrominoSequence();  // Assuming TetrominoSequence has a no-argument constructor
+        game = new Game(board, 1, sequence);  // Initialize Game with board, initial level, and sequence
     }
 
-    // Test for calculating score
+    // Test for calculating score based on lines cleared
     @Test
-    public void testCalculateScore() {
+    public void testUpdateScore() {
         int initialScore = game.getScore();
-        game.clearLines(3);  // Assume clearLines is the method that adds score
-        assertEquals(initialScore + 300, game.getScore());
+        game.updateScore(3);  // Simulate clearing 3 lines
+        assertEquals(initialScore + 600, game.getScore());  // 600 points for 3 lines
     }
 
-    // Test for game over state
+    // Test for incrementing lines erased
     @Test
-    public void testIsGameOver() {
-        game.setGameOver(true);
-        assertTrue(game.isGameOver());
+    public void testIncrementLinesErased() {
+        int initialLinesErased = game.getLinesErased();
+        game.incrementLinesErased(2);  // Simulate erasing 2 lines
+        assertEquals(initialLinesErased + 2, game.getLinesErased());
     }
 
-    // Test for resetting the game
+    // Test for checking level progression
     @Test
-    public void testResetGame() {
-        game.reset();
-        assertFalse(game.isGameOver());
-        assertEquals(0, game.getScore());
+    public void testCheckLevelUp() {
+        game.incrementLinesErased(10);  // Erase 10 lines to trigger level up
+        game.checkLevelUp();  // Should increment level
+        assertEquals(2, game.getCurrentLevel());  // Level should now be 2
     }
 
-    // Test for adding a player name
+    // Test for pausing and resuming the game
     @Test
-    public void testAddPlayerName() {
-        game.setPlayerName("Player1");
-        assertEquals("Player1", game.getPlayerName());
+    public void testPauseResumeGame() {
+        game.pauseGame();  // Pause the game
+        assertTrue(game.isPaused());
+
+        game.resumeGame();  // Resume the game
+        assertFalse(game.isPaused());
     }
 
-    // Test for clearing lines and increasing level
+    // Test for retrieving the next tetromino shape
     @Test
-    public void testLevelIncrease() {
-        game.clearLines(10);
-        assertEquals(2, game.getLevel());
+    public void testGetNextShape() {
+        assertNotNull(game.getNextShape());  // Ensure a tetromino shape is retrieved
+    }
+
+    // Test for toggling pause and resume
+    @Test
+    public void testTogglePauseGame() {
+        game.togglePauseGame();  // Toggle to pause
+        assertTrue(game.isPaused());
+
+        game.togglePauseGame();  // Toggle to resume
+        assertFalse(game.isPaused());
     }
 }
