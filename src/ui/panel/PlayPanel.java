@@ -10,7 +10,7 @@ import util.AudioManager;
 import util.UIUtils;
 
 import javax.swing.*;
-        import java.awt.*;
+import java.awt.*;
 
 public class PlayPanel extends AbstractPanel implements ConfigObserver, GameController.GameOverListener {
     private MetaConfig config;
@@ -218,12 +218,6 @@ public class PlayPanel extends AbstractPanel implements ConfigObserver, GameCont
     private void pauseGames() {
         for (GameController controller : gameControllers) {
             controller.pauseGame();
-        }
-    }
-
-    private void resumeGames() {
-        for (GameController controller : gameControllers) {
-            controller.resumeGame();
         }
     }
 

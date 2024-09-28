@@ -82,15 +82,6 @@ public class MetaConfig {
     }
 
     /**
-     * Unregisters an observer from receiving configuration updates.
-     *
-     * @param observer The observer to unregister.
-     */
-    public void removeObserver(ConfigObserver observer) {
-        observers.remove(observer);
-    }
-
-    /**
      * Notifies all registered observers of a configuration change.
      */
     private void notifyObservers() {

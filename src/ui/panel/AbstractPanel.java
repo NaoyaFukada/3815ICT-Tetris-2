@@ -52,11 +52,6 @@ public abstract class AbstractPanel extends JPanel {
         MainFrame.MAIN_FRAME.showScreen("Main"); // Return to Main Panel
     }
 
-    // Allow child panels to add additional UI components to the title panel
-    public void setTitleAccessory(JComponent cmp, String position) {
-        titlePanel.add(cmp, position);
-    }
-
     // Abstract method to be implemented by subclasses to initialize their specific content
     protected abstract void initContentPanel();
 }

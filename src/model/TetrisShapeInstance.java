@@ -246,7 +246,7 @@ public class TetrisShapeInstance {
 
     // Speed up the falling when the down key is pressed
     public void speedUp() {
-        progress += 100;
+        progress += 80;
         // Check collision immediately after speeding up
         while (progress >= progressThreshold) {
             progress -= progressThreshold;
